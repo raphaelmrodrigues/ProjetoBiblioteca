@@ -45,4 +45,8 @@ def valida_login(request):
         return redirect('/auth/login/?status=1')
     elif len(usuario) > 0:
         request.session['usuario'] = usuario[0].id
-        return redirect('/livro/home/')
+        return redirect(f'/livro/home/?id_usuario={request.session["usuario"]}')
+
+def sair(request):
+    request.session.flush()
+    return redirect('/auth/login/')
