@@ -4,6 +4,37 @@
 
 {% block 'conteudo' %}
 <div class="container">
+    <br>
+    {% if status == '0'%}
+    <div class="alert alert-success" role="alert">
+        Cadastro realizado com sucesso!
+    </div>
+    {% endif %}
+
+    {% if status == '1'%}
+    <div class="alert alert-danger" role="alert">
+        Campo(s) de nome e/ou e-mail inválidos!
+    </div>
+    {% endif %}
+
+    {% if status == '2'%}
+    <div class="alert alert-danger" role="alert">
+        Campo de senha deve conter no mínimo 8 caracteres!
+    </div>
+    {% endif %}
+
+    {% if status == '3'%}
+    <div class="alert alert-danger" role="alert">
+        Usuário já cadastrado!
+    </div>
+    {% endif %}
+
+    {% if status == '4'%}
+    <div class="alert alert-danger" role="alert">
+        Falha na comunicação com o banco de dados. Erro interno do sistema.
+    </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-md">
 
@@ -24,6 +55,7 @@
                 <input name="senha" class="form-control" type="password" placeholder="Senha...">
                 <br>
                 <input class="btn btn-info btn-lg" type="submit" value="enviar">
+                <a href="{% url 'login'%}" class="btn btn-warning btn-lg">Login</a>
             </form>
 
         </div>

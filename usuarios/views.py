@@ -2,13 +2,16 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Usuario
 from django.shortcuts import redirect
+from hashlib import sha256
 # Create your views here.
 
 def login(request):
-    return HttpResponse('login')
+    status = request.GET.get('status')
+    return render(request, 'login.html', {'status': status})
 
 def cadastro(request):
-    return render(request, 'cadastro.html')
+    status = request.GET.get('status')
+    return render(request, 'cadastro.html', {'status': status})
 
 def valida_cadastro(request):
     nome = request.POST.get('nome')
@@ -24,10 +27,22 @@ def valida_cadastro(request):
     if len(usuario) > 0:
         return redirect('/auth/cadastro/?status=3')
     try:
-        usuario = Usuario(nome =nome, senha = senha, email = email)
+        senha = sha256(senha.encode()).hexdigest()
+        usuario = Usuario(nome = nome, senha = senha, email = email)
         usuario.save()
         return redirect('/auth/cadastro/?status=0')
     except:
         return redirect('/auth/cadastro/?status=4')
 
-    return HttpResponse(f"{nome}{senha}{email}")
+def valida_login(request):
+    email = request.POST.get('email')
+    senha = request.POST.get('senha')
+    senha = sha256(senha.encode()).hexdigest()
+
+    usuario = Usuario.objects.filter(email=email).filter(senha=senha)
+
+    if len(usuario) == 0:
+        return redirect('/auth/login/?status=1')
+    elif len(usuario) > 0:
+        request.session['usuario'] = usuario[0].id
+        return redirect('/livro/home/')
