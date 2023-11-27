@@ -4,12 +4,24 @@
 
 {% block 'conteudo' %}
 
+<div class="container">
+    <div class="row">
+        {% for livro in livros %}
+            <div class="col-md">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{livro.nome}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{livro.autor}}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Data cadastro: {{livro.data_cadastro}}</h6>
+                        <p class="card-text">{{livro.categoria}}</p>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 
-
-{% for livro in livros %}
-
-    {{livro}}
-
-{% endfor %}
 
 {% endblock %}
