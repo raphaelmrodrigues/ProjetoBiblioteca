@@ -17,8 +17,5 @@ def home(request):
 def ver_livros(request, id):
     if request.session.get('usuario'):
         livros = Livros.objects.get(id = id)
-        if request.session.get('usuario') == livros.usuario.id:
-            return render(request, 'ver_livro.html', {'livro': livros})
-        else:
-            return HttpResponse('Esse livro não é seu')
-    return redirect('/auth/login/?status=2')
+        return render(request, 'ver_livro.html', {'livro': livros})
+

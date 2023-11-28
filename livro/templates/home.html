@@ -4,6 +4,19 @@
 
 {% block 'conteudo' %}
 
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background-color: #fafafa;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
 <div class="container">
     <div class="row">
         {% for livro in livros %}
