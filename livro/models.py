@@ -41,8 +41,10 @@ class Emprestimos(models.Model):
     nome_emprestado = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
     data_emprestimo = models.DateTimeField(blank=True, null=True)
     data_devolucao = models.DateTimeField(blank=True, null=True)
-    tempo_duracao = models.DateField(blank=True, null=True)
     livro = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
 
     class Meta:
         verbose_name = 'Emprestimo'
+
+    def __str__(self):
+        return f"{self.nome_emprestado} | {self.livro}"

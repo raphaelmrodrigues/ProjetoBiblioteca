@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from usuarios.models import Usuario
-from livro.models import Livros
+from livro.models import Livros, Emprestimos
 
 
 # Create your views here.
@@ -17,5 +17,6 @@ def home(request):
 def ver_livros(request, id):
     if request.session.get('usuario'):
         livros = Livros.objects.get(id = id)
-        return render(request, 'ver_livro.html', {'livro': livros})
+        emprestimos = Emprestimos.objects.filter(livro = livros)
+        return render(request, 'ver_livro.html', {'livro': livros, 'emprestimos': emprestimos})
 
