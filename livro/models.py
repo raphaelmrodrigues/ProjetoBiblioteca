@@ -12,6 +12,7 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nome
 
+
 class Livros(models.Model):
     nome = models.CharField(max_length = 100)
     autor = models.CharField(max_length = 30)
@@ -26,13 +27,8 @@ class Livros(models.Model):
     idioma = models.CharField(max_length=30, choices=i, default="PT=BR")
     descricao = models.CharField(max_length=300, blank=True, null=True)
     emprestado = models.BooleanField(default=False)
-    nome_emprestado = models.CharField(max_length=30, blank=True, null=True)
-    data_emprestimo = models.DateTimeField(blank=True, null=True)
-    data_devolucao = models.DateTimeField(blank=True, null=True)
-    tempo_duracao = models.DateField(blank=True, null=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
     usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank=True, null=True)
-
 
     class Meta:
         verbose_name = 'Livro'
@@ -40,3 +36,13 @@ class Livros(models.Model):
     def __str__(self):
         return self.nome
 
+
+class Emprestimos(models.Model):
+    nome_emprestado = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+    data_emprestimo = models.DateTimeField(blank=True, null=True)
+    data_devolucao = models.DateTimeField(blank=True, null=True)
+    tempo_duracao = models.DateField(blank=True, null=True)
+    livro = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name = 'Emprestimo'
