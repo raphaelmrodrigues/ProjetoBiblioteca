@@ -30,6 +30,6 @@ def cadastrar_livro(request):
 
         if form.is_valid():
             form.save()
-            return HttpResponse
+            return redirect('/livro/home')
         else:
             return HttpResponse('DADOS INVALIDOS')
