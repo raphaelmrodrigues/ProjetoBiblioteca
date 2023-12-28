@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+import datetime
 from usuarios.models import Usuario
 
 # Create your models here.
@@ -38,10 +39,18 @@ class Livros(models.Model):
 
 
 class Emprestimos(models.Model):
+    choices = (
+        ('P', 'Pessimo'),
+        ('R', 'Ruim'),
+        ('RL', 'Regular'),
+        ('B', 'Bom'),
+        ('O', 'Ótimo')
+    )
     nome_emprestado = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
-    data_emprestimo = models.DateTimeField(blank=True, null=True)
+    data_emprestimo = models.DateTimeField(default=datetime.datetime.now())
     data_devolucao = models.DateTimeField(blank=True, null=True)
     livro = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
+    avaliacao = models.CharField(max_length=15, choices=choices, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Emprestimo'

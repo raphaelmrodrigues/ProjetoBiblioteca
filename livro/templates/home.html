@@ -21,6 +21,25 @@
 </style>
 
 <div class="container">
+
+    {% if status == '0'%}
+    <div class="alert alert-success" role="alert">
+        Empréstimo realizado com sucesso!
+    </div>
+    {% endif %}
+
+    {% if status == '1'%}
+    <div class="alert alert-success" role="alert">
+        Cadastro de livro realizado com sucesso!
+    </div>
+    {% endif %}
+
+    {% if status == '2'%}
+    <div class="alert alert-success" role="alert">
+        Devolução realizada com sucesso!
+    </div>
+    {% endif %}
+
     <br>
     <div class="row">
         {% for livro in livros %}

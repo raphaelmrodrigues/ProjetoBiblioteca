@@ -20,76 +20,6 @@
 
     <div class="row">
 
-
-        <div class="card">
-            <h2>{{livro.nome}}</h2>
-            <br>
-            <img class="image" src="settings.png" alt="Autor: {{livro.autor}}" />
-            <img class="image" src="settings.png" alt="Co-autor: {{livro.co_autor}}" />
-            <p>Data de cadastro: {{livro.data_cadastro}}</p>
-            <img class="image" src="settings.png" alt="Descrição: {{livro.descricao}}" />
-            <br>
-            <br>
-            {% if livro.emprestado %}
-
-            <h6 style="display: inline;" class="card-subtitle mb-2 text-muted">Indisponível</h6>
-            <svg style="color: red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293z"/>
-            </svg>
-            {% else %}
-
-            <h6 style="display: inline;" class="card-subtitle mb-2 text-muted">Disponível</h6>
-            <svg style="color: green;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3"/>
-            </svg>
-            {% endif %}
-
-        </div>
-
-    </div>
-
-    <style>
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: #fafafa;
-        }
-
-        .row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card {
-            border-radius: 5px;
-            box-shadow: 7px 7px 13px 0px rgba(50, 50, 50, 0.22);
-            padding: 30px;
-            margin: 80px;
-            width: 500px;
-            transition: all 0.3s ease-out;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            cursor: pointer;
-        }
-
-        .card p {
-            color: #a3a5ae;
-            font-size: 16px;
-        }
-
-        .image {
-            float: right;
-        }
-
-
-    </style>
-
-
-
-
-
     <div style="text-align: center;" class="container">
         <input class="form-control" value="{{livro.nome}}">
         <h1> {{livro.nome}} </h1>
@@ -127,25 +57,15 @@
             </thead>
             <tbody>
             {% for i in emprestimos %}
-            <tr>
-                <th scope="row">{{i.nome_emprestado}}</th>
-                <td>{{i.data_emprestimo}}</td>
-                <td>{{i.data_devolucao}}</td>
-                <td>{{i.data_devolucao|mostra_duracao:i.data_emprestimo}}</td>
-            </tr>
+                {% if i.data_devolucao != None %}
+                    <tr>
+                        <th scope="row">{{i.nome_emprestado}}</th>
+                        <td>{{i.data_emprestimo}}</td>
+                        <td>{{i.data_devolucao}}</td>
+                        <td>{{i.data_devolucao|mostra_duracao:i.data_emprestimo}}</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-            </tr>
             </tbody>
         </table>
 
