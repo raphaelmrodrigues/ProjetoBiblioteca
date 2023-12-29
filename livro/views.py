@@ -37,36 +37,22 @@ def ver_livros(request, id):
     if request.session.get('usuario'):
         status = request.GET.get('status')
         livro = Livros.objects.get(id = id)
-        if request.session.get('usuario') == livro.usuario.id:
-            form = CadastroLivro()
-            usuario = Usuario.objects.get(id = request.session['usuario'])
-            livros = Livros.objects.filter(usuario_id = request.session.get('usuario'))
-            emprestimos = Emprestimos.objects.filter(livro = livro)
-            livros_disponiveis = Livros.objects.filter(emprestado = False)
-            livros_emprestados = Livros.objects.filter(emprestado = True)
-            return render(request, 'ver_livro.html', {'livro': livro,
-                                                      'emprestimos': emprestimos,
-                                                      'usuario_logado': request.session.get('usuario'),
-                                                      'form': form,
-                                                      'usuario':usuario,
-                                                      'livros': livros,
-                                                      'livros_disponiveis': livros_disponiveis,
-                                                      'livros_emprestados': livros_emprestados,
-                                                      'status': status})
-        else:
-            form = CadastroLivro()
-            usuario = Usuario.objects.get(id = request.session['usuario'])
-            livros = Livros.objects.filter(usuario_id = request.session.get('usuario'))
-            emprestimos = Emprestimos.objects.filter(livro = livro)
-            livros_emprestados = Livros.objects.filter(emprestado = True)
-            return render(request, 'ver_livro.html', {'livro': livro,
-                                                      'emprestimos': emprestimos,
-                                                      'usuario_logado': request.session.get('usuario'),
-                                                      'form': form,
-                                                      'usuario':usuario,
-                                                      'livros': livros,
-                                                      'status': status,
-                                                      'livros_emprestados': livros_emprestados})
+        form = CadastroLivro()
+        usuario = Usuario.objects.get(id = request.session['usuario'])
+        livros = Livros.objects.filter(usuario_id = request.session.get('usuario'))
+        emprestimos = Emprestimos.objects.filter(livro = livro)
+        livros_disponiveis = Livros.objects.filter(emprestado = False)
+        livros_emprestados = Livros.objects.filter(emprestado = True)
+        return render(request, 'ver_livro.html', {'livro': livro,
+                                                  'emprestimos': emprestimos,
+                                                  'usuario_logado': request.session.get('usuario'),
+                                                  'form': form,
+                                                  'usuario':usuario,
+                                                  'livros': livros,
+                                                  'livros_disponiveis': livros_disponiveis,
+                                                  'livros_emprestados': livros_emprestados,
+                                                  'status': status})
+
 
 def cadastrar_livro(request):
     if request.method == 'POST':
