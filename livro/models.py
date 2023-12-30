@@ -26,7 +26,7 @@ class Livros(models.Model):
         ("ES", "Espanhol"),
     )
     idioma = models.CharField(max_length=30, choices=i, default="PT=BR")
-    descricao = models.CharField(max_length=300, blank=True, null=True)
+    descricao = models.TextField(blank=True, null=True)
     emprestado = models.BooleanField(default=False)
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
     usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank=True, null=True)

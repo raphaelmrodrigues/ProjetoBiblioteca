@@ -87,3 +87,17 @@ def devolver_livro(request):
     livro_devolver.save()
 
     return redirect('/livro/home/?status=2')
+
+def emprestimos(request):
+    usuario = Usuario.objects.get(id = request.session['usuario'])
+    emprestimos = Emprestimos.objects.filter(nome_emprestado = usuario).filter()
+    livros_disponiveis = Livros.objects.filter(emprestado = False)
+    livros_emprestados = Livros.objects.filter(emprestado = True)
+    form = CadastroLivro()
+
+    return render(request, 'emprestimos.html', {'usuario_logado': request.session['usuario'],
+                                                'emprestimos': emprestimos,
+                                                'livros_disponiveis': livros_disponiveis,
+                                                'livros_emprestados': livros_emprestados,
+                                                'usuario': usuario,
+                                                'form': form})

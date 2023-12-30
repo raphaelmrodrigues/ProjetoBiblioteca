@@ -12,6 +12,8 @@
     <title>{% block 'titulo' %} {% endblock %}</title>
 </head>
 <body>
+
+
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'home' %}">Sistema de Gerenciamento de Bibliotecas - SGE</a>
         {% if usuario_logado %}
@@ -21,10 +23,11 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exampleModalCenter">Opções</button>
-                <a href="{% url 'sair' %}" class="dropdown-item">Sair</a>
+                <button type="button" class="btn btn-dark dropdown-item" data-toggle="modal" data-target="#exampleModalCenter">Opções</button>
+                <a href="{% url 'emprestimos' %}" class="btn btn-dark dropdown-item">Emprestimos</a>
+                <a href="{% url 'sair' %}" class="btn btn-danger dropdown-item">Sair</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item">Total: {{total_livros}}</a>
+                <a class="btn btn-danger dropdown-item">Total: {{total_livros}}</a>
 
             </div>
         </div>
