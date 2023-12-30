@@ -3,6 +3,43 @@
 {% block 'head' %}
 
     <style>
+        .vazio_finalizados{
+            margin-top: 100px;
+            margin-bottom: 100px;
+            text-align: center;
+            display: block;
+        }
+        .vazio_atuais{
+            margin-top: 100px;
+            margin-bottom: 100px;
+            text-align: center;
+            display: block;
+        }
+
+        .cartao_finalizados:hover{
+            background-color: #d6d6d6;
+        }
+
+        .cartao_atuais:hover{
+            background-color: #d6d6d6;
+        }
+
+        .cartao_finalizados {
+            background-color: #f7f7f7;
+            padding: 20px;
+            margin-top: 3%;
+            border-radius: 20px;
+            box-shadow: 1px 1px 2px #555555;
+        }
+
+
+        .cartao_atuais{
+            background-color: #f7f7f7;
+            padding: 20px;
+            margin-top: 3%;
+            border-radius: 20px;
+            box-shadow: 1px 1px 2px #555555;
+        }
         .card{
             background-color: white;
             padding: 20px;
@@ -45,7 +82,7 @@
                 </ul>
             </div>
 
-        <div style="display: None" id="atuais">
+        <div id="atuais">
             <div class="cabecalho">
                 <hr>
                 <h3>Empréstimos Atuais  <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
@@ -55,28 +92,37 @@
                 <hr>
             </div>
             {% for emprestimo in emprestimos %}
-            {% if emprestimo.data_devolucao == None %}
-            <div class="card">
-                <div class="titulo">
-                    <h3>{{emprestimo.livro}}</h3>
-                </div>
-                <hr>
-                <div class="body">
-                    <label><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
-                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                    </svg>&nbsp Data emprestimo: {{emprestimo.data_emprestimo}}</label>
-                    <br>
-                    <label><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
-                        <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                    </svg>&nbsp Data devolução: Não devolvido!</label>
-
-                </div>
-            </div>
-            {% endif %}
+                {% if emprestimo.data_devolucao == None %}
+                    <div class="cartao_atuais">
+                        <div class="titulo">
+                            <h3>{{emprestimo.livro}}</h3>
+                        </div>
+                        <hr>
+                        <div class="body">
+                            <label><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                            </svg>&nbsp Data emprestimo: {{emprestimo.data_emprestimo}}</label>
+                            <br>
+                            <label><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
+                                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                            </svg>&nbsp Data devolução: Não devolvido!</label>
+                            <br>
+                            <a class="btn btn-secondary" href="{% url 'ver_livros' emprestimo.livro.id %}">ver livro</a>
+                            <button class="btn btn-info" >Avaliar</button>
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
-        </div>
 
+            <div id="vazio_atuais" class="vazio_atuais">
+                <p class="text-muted" style="text-align: center">Não há emprestimos realizados!  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+                    <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"/>
+                    <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"/>
+                </svg></p>
+            </div>
+
+        </div>
 
         <div style="display: None" id="finalizados">
             <div class="cabecalho">
@@ -89,7 +135,7 @@
             </div>
             {% for emprestimo in emprestimos %}
                 {% if emprestimo.data_devolucao != None %}
-                    <div class="card">
+                    <div class="cartao_finalizados">
                         <div class="titulo">
                             <h3>{{emprestimo.livro}}</h3>
                         </div>
@@ -103,15 +149,62 @@
                                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
                                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
                             </svg>&nbsp Data devolução: {{emprestimo.data_devolucao}}</label>
+                            <br>
+                            <a class="btn btn-secondary" href="{% url 'ver_livros' emprestimo.livro.id %}">Ver livro</a>
+                            {% if .avaliacao == None %}
+                                <button onclick="avaliacao(emprestimo.id)" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                                    Avaliar
+                                </button>
+
+                            {% else %}
+
+                            {% endif %}
 
                         </div>
                     </div>
                 {% endif %}
             {% endfor %}
+
+            <div id="vazio_finalizados" class="vazio_finalizados">
+                <p class="text-muted" style="text-align: center">Não há emprestimos realizados!  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+                    <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"/>
+                    <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"/>
+                </svg></p>
+            </div>
+
         </div>
 
 
     </div>
+
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Avaliação</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'processa_avaliacao' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="id_emprestimo" name="id_emprestimo">
+                            <input type="hidden" id="id_livro" name="id_livro">
+                            <select class="form-control" name="opcoes">
+                                <option value="P">Péssimo</option>
+                                <option value="R">Ruim</option>
+                                <option value="RL">Regular</option>
+                                <option value="B">Bom</option>
+                                <option value="O">Ótimo</option>
+                            </select>
+                            <br>
+                            <input type="submit" class="btn btn-info" value="Avaliar">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <script>
 
@@ -127,6 +220,28 @@
                 finalizados.style.display = 'block';
             }
         }
+
+        if (document.querySelectorAll('.cartao_finalizados').length >= 1) {
+            vazio_finalizados = document.getElementById('vazio_finalizados')
+            vazio_finalizados.style.display = 'none';
+        }
+
+        if (document.querySelectorAll('.cartao_atuais').length >= 1) {
+            vazio_atuais = document.getElementById('vazio_atuais')
+            vazio_atuais.style.display = 'none';
+        }
+
+        function avaliacao(id_emprestimo){
+            input_emprestimo = document.getElementById('id_emprestimo')
+            input_emprestimo.value = id_emprestimo
+
+        }
+
+        function avaliacao2(id){
+            input_livro = document.getElementById('id')
+            input_livro.value = id
+        }
+
     </script>
 
 {% endblock %}

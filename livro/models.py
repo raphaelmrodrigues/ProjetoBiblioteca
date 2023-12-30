@@ -9,9 +9,9 @@ class Categoria(models.Model):
     nome = models.CharField(max_length=30)
     descricao = models.TextField()
 
-
     def __str__(self):
         return self.nome
+
 
 
 class Livros(models.Model):
@@ -39,6 +39,20 @@ class Livros(models.Model):
 
 
 class Emprestimos(models.Model):
+    nome_emprestado = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
+    data_emprestimo = models.DateTimeField(default=datetime.datetime.now())
+    data_devolucao = models.DateTimeField(blank=True, null=True)
+    livro = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
+
+
+    class Meta:
+        verbose_name = 'Emprestimo'
+
+    def __str__(self):
+        return f"{self.nome_emprestado} | {self.livro}"
+
+
+class Avaliacoes(models.Model):
     choices = (
         ('P', 'Pessimo'),
         ('R', 'Ruim'),
@@ -46,14 +60,13 @@ class Emprestimos(models.Model):
         ('B', 'Bom'),
         ('O', 'Ótimo')
     )
-    nome_emprestado = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
-    data_emprestimo = models.DateTimeField(default=datetime.datetime.now())
-    data_devolucao = models.DateTimeField(blank=True, null=True)
-    livro = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
     avaliacao = models.CharField(max_length=15, choices=choices, null=True, blank=True)
+    livro_avaliado = models.ForeignKey(Livros, on_delete=models.DO_NOTHING)
+    usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Emprestimo'
+        verbose_name = 'Avaliacoe'
 
     def __str__(self):
-        return f"{self.nome_emprestado} | {self.livro}"
+        return f"{self.avaliacao} | {self.livro_avaliado}"
+

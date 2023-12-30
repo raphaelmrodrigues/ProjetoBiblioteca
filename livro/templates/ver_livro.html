@@ -84,6 +84,7 @@
                 <th scope="col">Data emprestimo</th>
                 <th scope="col">Data devolução</th>
                 <th scope="col">Tempo de duração</th>
+                <th scope="col">Avaliação</th>
             </tr>
             </thead>
             <tbody>
@@ -94,6 +95,7 @@
                         <td>{{i.data_emprestimo}}</td>
                         <td>{{i.data_devolucao}}</td>
                         <td>{{i.data_devolucao|mostra_duracao:i.data_emprestimo}}</td>
+                        <td>{{i.nome_emprestado}}</td>
                     </tr>
                 {% endif %}
             {% endfor %}
