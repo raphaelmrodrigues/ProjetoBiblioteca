@@ -3,7 +3,7 @@ import datetime
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from usuarios.models import Usuario
-from livro.models import Livros, Emprestimos, Avaliacoes
+from livro.models import Livros, Emprestimos
 from .forms import CadastroLivro
 from django.db.models import Q
 
@@ -94,21 +94,18 @@ def emprestimos(request):
     livros_disponiveis = Livros.objects.filter(emprestado = False)
     livros_emprestados = Livros.objects.filter(emprestado = True)
     form = CadastroLivro()
-    avaliar = Avaliacoes.objects.filter(usuario = usuario)
+
 
     return render(request, 'emprestimos.html', {'usuario_logado': request.session['usuario'],
                                                 'emprestimos': emprestimos,
                                                 'livros_disponiveis': livros_disponiveis,
                                                 'livros_emprestados': livros_emprestados,
                                                 'usuario': usuario,
-                                                'form': form,
-                                                'avaliar': avaliar})
+                                                'form': form})
 
 def processa_avaliacao(request):
-    id_emprestimo = request.POST.get('id_emprestimo')
+    id_livro, id_emprestimo = request.POST['id_livro'].split('_')
     opcoes = request.POST.get('opcoes')
-    id_livro = request.POST.get('id_livro')
-
     emprestimo = Emprestimos.objects.get(id = id_emprestimo)
     emprestimo.avaliacao = opcoes
     emprestimo.save()

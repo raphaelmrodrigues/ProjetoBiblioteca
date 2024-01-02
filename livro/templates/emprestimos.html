@@ -77,7 +77,7 @@
                         <button class="btn nav-link active" onclick="mostrar_cards(2)">Finalizados</button>
                     </li>
                     <li class="nav-item">
-                        <button class="btn nav-link active"  onclick="mostrar_cards(3)">Avaliação</button>
+                        <button data-toggle="modal" data-target="#exampleModalLong2" class="btn nav-link active">Avaliação</button>
                     </li>
                 </ul>
             </div>
@@ -109,7 +109,6 @@
                             </svg>&nbsp Data devolução: Não devolvido!</label>
                             <br>
                             <a class="btn btn-secondary" href="{% url 'ver_livros' emprestimo.livro.id %}">ver livro</a>
-                            <button class="btn btn-info" >Avaliar</button>
                         </div>
                     </div>
                 {% endif %}
@@ -151,13 +150,16 @@
                             </svg>&nbsp Data devolução: {{emprestimo.data_devolucao}}</label>
                             <br>
                             <a class="btn btn-secondary" href="{% url 'ver_livros' emprestimo.livro.id %}">Ver livro</a>
-                            {% if .avaliacao == None %}
-                                <button onclick="avaliacao(emprestimo.id)" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                            {% if emprestimo.avaliacao == None %}
+                                <button onclick="avaliacao('{{emprestimo.id}}', '{{emprestimo.livro.id}}')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
                                     Avaliar
                                 </button>
-
                             {% else %}
-
+                            <button onclick="avaliacao('{{emprestimo.id}}', '{{emprestimo.livro.id}}')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                                Refazer avaliação
+                            </button>
+                            <br>
+                            {{emprestimo.avaliacao}}
                             {% endif %}
 
                         </div>
@@ -177,6 +179,8 @@
 
     </div>
 
+
+
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -189,8 +193,8 @@
                     <div class="modal-body">
                         <form action="{% url 'processa_avaliacao' %}" method="POST">
                             {% csrf_token %}
-                            <input type="hidden" id="id_emprestimo" name="id_emprestimo">
                             <input type="hidden" id="id_livro" name="id_livro">
+                            <input type="hidden" id="id_emprestimo" name="id_emprestimo">
                             <select class="form-control" name="opcoes">
                                 <option value="P">Péssimo</option>
                                 <option value="R">Ruim</option>
@@ -204,6 +208,45 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+
+
+        <div class="modal fade" id="exampleModalLong2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle2">Avaliações disponíveis</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'processa_avaliacao' %}" method="POST">
+                            {% csrf_token %}
+                            <select class="form-control" name="id_livro">
+                                {% for emprestimo in emprestimos %}
+                                    {% if emprestimo.data_devolucao != None %}
+                                        <option value="{{emprestimo.livro.id}}_{{emprestimo.id}}">{{emprestimo.livro.nome}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+
+                            <br>
+                            <select class="form-control" name="opcoes">
+                                <option value="P">Péssimo</option>
+                                <option value="R">Ruim</option>
+                                <option value="RL">Regular</option>
+                                <option value="B">Bom</option>
+                                <option value="O">Ótimo</option>
+                            </select>
+                            <br>
+                            <input type="submit" class="btn btn-info" value="Avaliar">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     <script>
@@ -231,15 +274,18 @@
             vazio_atuais.style.display = 'none';
         }
 
-        function avaliacao(id_emprestimo){
+        function avaliacao(id_emprestimo, id_livro){
+            id_emprestimo = parseInt(id_emprestimo, 10);
             input_emprestimo = document.getElementById('id_emprestimo')
             input_emprestimo.value = id_emprestimo
-
+            input_livro = document.getElementById('id_livro')
+            input_livro.value = id_livro
         }
 
-        function avaliacao2(id){
-            input_livro = document.getElementById('id')
-            input_livro.value = id
+        function id_emprestimo(id){
+            id = parseInt(id, 10);
+            input_id_emprestimo = document.getElementById('id_emprestimo2')
+            input_id_emprestimo.value = id
         }
 
     </script>
