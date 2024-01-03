@@ -56,7 +56,7 @@ def ver_livros(request, id):
 
 def cadastrar_livro(request):
     if request.method == 'POST':
-        form = CadastroLivro(request.POST)
+        form = CadastroLivro(request.POST, request.FILES)
 
         if form.is_valid():
             form.save()
@@ -104,10 +104,14 @@ def emprestimos(request):
                                                 'form': form})
 
 def processa_avaliacao(request):
-    id_livro, id_emprestimo = request.POST['id_livro'].split('_')
+    if 'id_livro_emprestimo' in request.POST:
+        id_livro, id_emprestimo = request.POST['id_livro_emprestimo'].split('_')
+    else:
+        id_livro = request.POST.get('id_livro')
+        id_emprestimo = request.POST.get('id_emprestimo')
     opcoes = request.POST.get('opcoes')
     emprestimo = Emprestimos.objects.get(id = id_emprestimo)
     emprestimo.avaliacao = opcoes
     emprestimo.save()
 
-    return redirect(f'/livro/ver_livro/{id_livro}')
+    return redirect('/livro/emprestimos/?status=0')

@@ -15,10 +15,15 @@ class Categoria(models.Model):
 
 
 class Livros(models.Model):
+    img = models.ImageField(upload_to='capa_livro', null=True, blank=True)
     nome = models.CharField(max_length = 100)
     autor = models.CharField(max_length = 30)
     co_autor = models.CharField(max_length = 30, blank=True)
     data_cadastro = models.DateField(default=date.today())
+    editora = models.CharField(max_length = 60, blank=True, null=True)
+    data_publicacao = models.DateField(default=date.today())
+    numero_paginas = models.IntegerField(blank=True, null=True)
+    edicao = models.IntegerField(default = 1)
     i = (
         ("PT-BR", "Portugues-BR"),
         ("EN-US", "Ingles (Estados Unidos)"),
