@@ -57,7 +57,6 @@
         .container{
             background-color: #f7f7f7;
             padding-bottom: 20px;
-            border-radius: 20px;
         }
 
     </style>
@@ -65,6 +64,7 @@
 {% endblock %}
 
 {% block 'conteudo' %}
+
 
     <div class="container">
         <br>
@@ -81,13 +81,13 @@
             <div class="card-header">
                 <ul class="nav nav-pills card-header-pills">
                     <li class="nav-item">
-                        <button class="btn nav-link active" onclick="mostrar_cards(1)">Atuais</button>
+                        <button id="botao_atuais" class="btn nav-link active" onclick="mostrar_cards(1)">Atuais</button>
                     </li>
                     <li class="nav-item">
-                        <button class="btn nav-link active" onclick="mostrar_cards(2)">Finalizados</button>
+                        <button id="botao_finalizados" class="btn nav-link active" onclick="mostrar_cards(2)">Finalizados</button>
                     </li>
                     <li class="nav-item">
-                        <button data-toggle="modal" data-target="#exampleModalLong2" class="btn nav-link active">Avaliação</button>
+                        <button id="botao_avaliacao" data-toggle="modal" data-target="#exampleModalLong2" class="btn nav-link active">Avaliação</button>
                     </li>
                 </ul>
             </div>

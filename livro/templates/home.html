@@ -4,23 +4,32 @@
 
 {% block 'conteudo' %}
 
-
-
-
 <style>
-    body {
-        font-family: "Poppins", sans-serif;
-        background-color: #fafafa;
+    .container{
+        background-color: #f7f7f7;
     }
 
-    .row {
+    .row{
+        margin-left: 35px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        flex-wrap: wrap;
     }
+
+    .card{
+        width: 18rem;
+        margin-bottom: 50px; /* Espaçamento entre os cards */
+        display: flex;
+        flex-direction: column; /* Garante que o conteúdo dentro do card seja empilhado verticalmente */
+        height: 100%;
+    }
+
 </style>
 
+
+
+
 <div class="container">
+
     <br>
     {% if status == '0'%}
     <div class="alert alert-success" role="alert">
@@ -43,38 +52,42 @@
     <br>
     <div class="row">
         {% for livro in livros %}
-            <div class="col-md">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
+            <div style="margin-bottom: 20px; height: 600px" class="col-md">
+                <div class="card">
+                    <div style="margin-bottom: -90px" class="card-body">
                         {% if livro.img %}
-                            <img width="100%" src="{{livro.img.url}}">
+                            <img style="height: 65%; width: 100%"  src="{{livro.img.url}}">
                         {% else %}
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
                                 <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
                                 <path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1z"/>
                             </svg>
-                            <br>
                             <hr>
                         {% endif %}
                         <hr>
-                        <h5 class="card-title">{{livro.nome}}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Autor: {{livro.autor}}</h6>
+                        <strong class="card-title">{{livro.nome}}</strong>
+                        <br>
+                        <h8 class="card-subtitle mb-2 text-muted">Autor: {{livro.autor}}</h8>
+                    </div>
+                    <div style="margin-top: auto; margin-left: 20px" class="card-disponibilidade">
                         {% if livro.emprestado %}
-                            <div style="background-color: #f8f8f8; margin-right: 120px; padding: 5px; border-radius: 10px">
-                                <h6 style="display: inline;" class="card-subtitle mb-2 text-muted">Indisponível</h6>
+                            <div style="background-color: #f8f8f8; margin-right: 150px; padding: 5px; border-radius: 10px">
+                                <h6 style="display: inline; color: red">Indisponível</h6>
                                 <svg style="color: red;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293z"/>
                                 </svg>
                             </div>
                         {% else %}
-                            <div style="background-color: #f8f8f8; margin-right: 120px; padding: 5px; border-radius: 10px">
-                                <h6 style="display: inline;" class="card-subtitle mb-2 text-muted">Disponível</h6>
+                            <div style="background-color: #f8f8f8; margin-right: 160px; padding: 5px; border-radius: 10px">
+                                <h6 style="display: inline; color:green">Disponível</h6>
                                 <svg style="color: green;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3"/>
                                 </svg>
                             </div>
                         {% endif %}
-                        <br>
+                    </div>
+                    <div style="margin-top: auto; margin-left: 20px; margin-bottom: 20px" class="botao">
+                        <hr style="margin-right: 20px">
                         <a href="{% url 'ver_livros' livro.id %}" class="btn btn-info">Ver detalhes</a>
                     </div>
                 </div>

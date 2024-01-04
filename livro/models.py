@@ -25,12 +25,12 @@ class Livros(models.Model):
     numero_paginas = models.IntegerField(blank=True, null=True)
     edicao = models.IntegerField(default = 1)
     i = (
-        ("PT-BR", "Portugues-BR"),
-        ("EN-US", "Ingles (Estados Unidos)"),
-        ("FR", "Frances"),
-        ("ES", "Espanhol"),
+        ('PT-BR', 'Portugues-BR'),
+        ('EN-US', 'Ingles (Estados Unidos)'),
+        ('FR', "Frances"),
+        ('ES', "Espanhol"),
     )
-    idioma = models.CharField(max_length=30, choices=i, default="PT=BR")
+    idioma = models.CharField(max_length=30, choices=i, default='PT-BR')
     descricao = models.TextField(blank=True, null=True)
     emprestado = models.BooleanField(default=False)
     categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
