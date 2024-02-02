@@ -1,11 +1,15 @@
 from django.shortcuts import render
 import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from usuarios.models import Usuario
 from livro.models import Livros, Emprestimos
 from .forms import CadastroLivro
 from django.db.models import Q
+
+from mqtt.main.mqtt_connection.mqtt_cient_connection import MqttClientConnection
+from mqtt.configs.broker_configs import mqtt_broker_configs
+import time
 
 
 # Create your views here.
@@ -68,6 +72,7 @@ def cadastrar_emprestimo(request):
     if request.method == 'POST':
         nome_emprestado = request.POST.get('nome_emprestado')
         livro_emprestado = request.POST.get('livro_emprestado')
+
         emprestimo = Emprestimos(nome_emprestado_id = nome_emprestado, livro_id = livro_emprestado)
         emprestimo.save()
         livro = Livros.objects.get(id = livro_emprestado)
@@ -115,3 +120,79 @@ def processa_avaliacao(request):
     emprestimo.save()
 
     return redirect('/livro/emprestimos/?status=0')
+
+
+
+def processa_rfid_usuario(request):
+
+    mqtt_client_connection = MqttClientConnection(
+        mqtt_broker_configs["HOST"],
+        mqtt_broker_configs["PORT"],
+        mqtt_broker_configs["CLIENT_NAME"],
+        mqtt_broker_configs["KEEPALIVE"]
+    )
+
+    mqtt_client_connection.start_connection()
+
+
+    nome_emprestado = request.POST.get('nome_emprestado')
+    livro_emprestado = request.POST.get('livro_emprestado')
+    livro = Livros.objects.get(id=livro_emprestado)
+    usuario = Usuario.objects.get(id=nome_emprestado)
+
+    while mqtt_client_connection.last_message is None:
+        # Aguarde um curto período de tempo antes de verificar novamente
+        time.sleep(1)
+
+    if hasattr(mqtt_client_connection, 'last_message'):
+        last_message = mqtt_client_connection.last_message
+        print(f"Última mensagem recebida: {last_message}")
+        if last_message == usuario.idtag:
+            mqtt_client_connection.last_message = None
+            mqtt_client_connection.end_connection()
+            return JsonResponse({'status': 'usuario autenticado', 'livro_id': livro.id, 'success': True}, content_type='application/json')
+
+        else:
+            mqtt_client_connection.last_message = None
+            mqtt_client_connection.end_connection()
+            return JsonResponse({'status': 'usuario nao autenticado', 'success': False})
+
+    else:
+        print("A instância do MqttClientConnection não foi inicializada ainda.")
+
+
+
+
+
+def processa_rfid_livro(request):
+    mqtt_client_connection = MqttClientConnection(
+        mqtt_broker_configs["HOST"],
+        mqtt_broker_configs["PORT"],
+        mqtt_broker_configs["CLIENT_NAME"],
+        mqtt_broker_configs["KEEPALIVE"]
+    )
+    mqtt_client_connection.start_connection()
+
+    livro_id = request.POST.get('livro_id')
+    livro = Livros.objects.get(id=livro_id)
+
+    while mqtt_client_connection.last_message is None:
+        # Aguarde um curto período de tempo antes de verificar novamente
+        time.sleep(1)
+
+    if hasattr(mqtt_client_connection, 'last_message'):
+        last_message = mqtt_client_connection.last_message
+        print(f"Última mensagem recebida: {last_message}")
+        if last_message == livro.idtag:
+            mqtt_client_connection.last_message = None
+            mqtt_client_connection.end_connection()
+            return JsonResponse({'status': 'livro autenticado', 'success': True}, content_type='application/json')
+
+        else:
+            mqtt_client_connection.last_message = None
+            mqtt_client_connection.end_connection()
+            return JsonResponse({'status': 'livro nao autenticado', 'success': False})
+
+    else:
+        print("A instância do MqttClientConnection não foi inicializada ainda.")
+

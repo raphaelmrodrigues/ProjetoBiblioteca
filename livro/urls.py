@@ -8,5 +8,7 @@ urlpatterns = [
     path('cadastrar_emprestimo/', views.cadastrar_emprestimo, name='cadastrar_emprestimo'),
     path('devolver_livro/', views.devolver_livro, name='devolver_livro'),
     path('emprestimos/', views.emprestimos, name='emprestimos'),
-    path('processa_avaliacao', views.processa_avaliacao, name='processa_avaliacao')
+    path('processa_avaliacao', views.processa_avaliacao, name='processa_avaliacao'),
+    path('processa_rfid_usuario', views.processa_rfid_usuario, name='processa_rfid_usuario'),
+    path('processa_rfid_livro', views.processa_rfid_livro, name='processa_rfid_livro')
 ]

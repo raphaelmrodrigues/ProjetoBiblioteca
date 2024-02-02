@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -16,7 +18,6 @@
 
 </head>
 <body>
-
 
 
     <nav class="navbar navbar-dark bg-dark">
@@ -55,7 +56,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Cadastro / Empréstimo / Devolução</h5>
+                        <h5 class="modal-title d-flex justify-content-center" id="exampleModalLongTitle">Cadastro / Empréstimo / Devolução</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -78,7 +79,7 @@
                         </div>
 
                         <div style="display: none;" id="emprestimo">
-                            <form id="form-emprestimo" action="{% url 'cadastrar_emprestimo' %}" method="POST">
+                            <form id="form-emprestimo" action="{% url 'processa_rfid_usuario' %}" method="POST">
                                 {% csrf_token %}
 
                                 <select id="nome_usuario" class="form-control" name="nome_emprestado">
@@ -92,21 +93,101 @@
                                     {% endfor %}
                                 </select>
                                 <br>
+                                <div id="icone" style="display: block" onclick="submitForm(1)">
+                                    <img style="width: 20%; cursor: pointer" src="{% static 'rfid.png' %}" alt="RFID Image">
+                                </div>
 
-                                <input type="submit" class="btn btn-success" value="Realizar Emprestimo">
+                                <input type="hidden" class="btn btn-success" value="Realizar Emprestimo">
                             </form>
                         </div>
 
                         <div style="display: none;" id="devolucao">
                             <form action="{% url 'devolver_livro' %}" method="POST">
                                 {% csrf_token %}
+
+                                <select id="usuario_nome" class="form-control" name="nome_emprestado">
+                                    <option value="{{usuario.id}}">{{usuario.nome}}</option>
+                                </select>
+                                <br>
+
                                 <select class="form-control" name="livro_devolver">
                                     {% for livro in livros_emprestados %}
                                         <option value="{{livro.id}}">{{livro.nome}}</option>
                                     {% endfor %}
                                 </select>
                                 <br>
-                                <input type="submit" class="btn btn-success" value="Realizar Devolução">
+                                <div style="display: none" id="icone2" style="display: block" onclick="submitForm(1)">
+                                    <img style="width: 20%; cursor: pointer" src="{% static 'rfid.png' %}" alt="RFID Image">
+                                </div>
+                                <input type="hidden" class="btn btn-success" value="Realizar Devolução">
+                            </form>
+                        </div>
+
+                        <div style="display: none;" id="rfid_usuario">
+                            <form action="" method="GET">
+
+                                <h5 class="modal-title d-flex justify-content-center" id="exampleModalLongTitle2">Aproxime o cartão da leitora! <svg style="margin-left: 6px; margin-top: 5px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
+                                    <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
+                                    <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
+                                </svg></h5>
+                                <hr>
+                                <br>
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
+                                </div>
+                                <br>
+
+                            </form>
+                        </div>
+
+                        <div style="display: none;" id="rfid_livro">
+                            <form action="" method="GET">
+                                {% csrf_token %}
+
+                                <h5 class="modal-title d-flex justify-content-center" id="exampleModalLongTitle3">Aproxime o livro da leitora! <img style="width: 5%; margin-left: 5px" src="{% static 'icone_livros.png' %}" alt="Livro Image"></h5>
+                                <hr>
+                                <br>
+                                <div class="d-flex justify-content-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
+                                </div>
+                                <br>
+                            </form>
+                        </div>
+
+                        <div style="display: none;" id="cartao_invalido">
+                            <form action="" method="GET">
+
+                                <h5 class=" text-danger modal-title d-flex justify-content-center" id="exampleModalLongTitle4">Cartão inválido! <img style="width: 8%; margin-left: 5px" src="{% static 'icone_cartao_bloqueado.jpg' %}" alt="Cartao Image"></h5>
+                                <hr>
+                                <br>
+                                <button type="button" class="btn btn-warning" onclick="mostrar_form(2)">Refazer</button>
+
+                            </form>
+                        </div>
+
+                        <div style="display: none;" id="livro_invalido">
+                            <form action="" method="GET">
+
+                                <h5 class=" text-danger modal-title d-flex justify-content-center" id="exampleModalLongTitle5">Livro inválido! <img style="width: 8%; margin-left: 5px" src="{% static 'icone_livro_bloqueado.jpg' %}" alt="Livro Image"></h5>
+                                <hr>
+                                <br>
+                                <button type="button" class="btn btn-warning" onclick="mostrar_form(2)">Refazer</button>
+
+                            </form>
+                        </div>
+
+                        <div style="display: none;" id="sucesso">
+                            <form action="" method="GET">
+
+                                <h5 class=" text-success modal-title d-flex justify-content-center" id="exampleModalLongTitle6">Emprestimo realizado com sucesso! <svg style="margin-left: 6px; margin-top: 5px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+                                    <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
+                                </svg></h5>
+                                <hr>
+                                <br>
                             </form>
                         </div>
                     </div>
@@ -118,24 +199,134 @@
         </div>
     {% endif %}
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+
         function mostrar_form(v1){
             livro = document.getElementById('livro')
             emprestimo = document.getElementById('emprestimo')
             devolucao = document.getElementById('devolucao')
+            rfid_usuario = document.getElementById('rfid_usuario')
+            rfid_livro = document.getElementById('rfid_livro')
+            icone = document.getElementById('icone')
+            icone2 = document.getElementById('icone2')
+            cartao_invalido = document.getElementById('cartao_invalido')
+            livro_invalido = document.getElementById('livro_invalido')
+            sucesso = document.getElementById('sucesso')
 
             if(v1 == 1){
                 livro.style.display = 'block';
                 emprestimo.style.display = 'none';
                 devolucao.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'none';
+                icone.style.display = 'none';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'none';
             } else if(v1 == 2){
                 emprestimo.style.display = 'block';
                 livro.style.display = 'none';
                 devolucao.style.display = 'none';
+                icone.style.display = 'block';
+                cartao_invalido.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'none';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'none';
             } else if(v1 == 3){
                 devolucao.style.display = 'block';
                 emprestimo.style.display = 'none';
                 livro.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'none';
+                icone.style.display = 'none';
+                icone2.style.display = 'block';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'none';
+            } else if(v1 == 4){
+                devolucao.style.display = 'none';
+                emprestimo.style.display = 'none';
+                livro.style.display = 'none';
+                rfid_usuario.style.display = 'block';
+                rfid_livro.style.display = 'none';
+                icone.style.display = 'none';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'none';
+            } else if(v1 == 5){
+                devolucao.style.display = 'none';
+                emprestimo.style.display = 'none';
+                livro.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'block';
+                icone.style.display = 'none';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'none';
+            } else if(v1 == 6){
+                devolucao.style.display = 'none';
+                emprestimo.style.display = 'none';
+                livro.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'none';
+                icone.style.display = 'none';
+                cartao_invalido.style.display = 'block';
+                livro_invalido.style.display = 'none';
+            } else if(v1 == 7){
+                devolucao.style.display = 'none';
+                emprestimo.style.display = 'none';
+                livro.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'none';
+                icone.style.display = 'none';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'block';
+            } else if(v1 == 8){
+                devolucao.style.display = 'none';
+                emprestimo.style.display = 'none';
+                livro.style.display = 'none';
+                rfid_usuario.style.display = 'none';
+                rfid_livro.style.display = 'none';
+                icone.style.display = 'none';
+                cartao_invalido.style.display = 'none';
+                livro_invalido.style.display = 'none';
+                sucesso.style.display = 'block';
+            }
+        }
+        console.log('{% csrf_token %}')
+        var csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value
+        console.log(csrf_token)
+        function submitForm(v1) {
+            event.preventDefault()
+            if (v1 == 1) {
+                mostrar_form(4);
+                var form_data = new FormData(document.getElementById('form-emprestimo'))
+                axios.post("{% url 'processa_rfid_usuario' %}", form_data).then((response)=>{
+                    console.log(response.data)
+                    if (response.data.status === 'usuario autenticado'){
+                        mostrar_form(5)
+
+                        var payload_livro = new FormData()
+                        payload_livro.append('livro_id', response.data.livro_id)
+                        payload_livro.append('csrfmiddlewaretoken', csrf_token)
+
+                        axios.post("{% url 'processa_rfid_livro' %}", payload_livro).then((response2)=>{
+                            console.log(response2)
+                            if (response2.data.status === 'livro autenticado'){
+                                mostrar_form(8)
+                            }
+                            else {
+                                mostrar_form(7)
+                            }
+                        }).catch((error)=>{
+                            console.log(error)
+                        })
+                    }
+                    else {
+                        mostrar_form(6)
+                    }
+                }).catch((error)=>{
+                    console.log(error)
+                })
+
             }
         }
 
