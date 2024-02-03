@@ -70,8 +70,8 @@ def cadastrar_livro(request):
 
 def cadastrar_emprestimo(request):
     if request.method == 'POST':
-        nome_emprestado = request.POST.get('nome_emprestado')
-        livro_emprestado = request.POST.get('livro_emprestado')
+        nome_emprestado = request.POST.get('usuario_id')
+        livro_emprestado = request.POST.get('livro_id')
 
         emprestimo = Emprestimos(nome_emprestado_id = nome_emprestado, livro_id = livro_emprestado)
         emprestimo.save()
@@ -79,10 +79,10 @@ def cadastrar_emprestimo(request):
         livro.emprestado = True
         livro.save()
 
-        return redirect('/livro/home/?status=0')
+        return JsonResponse({'status': 'emprestimo realizado'})
 
 def devolver_livro(request):
-    id = request.POST.get('livro_devolver')
+    id = request.POST.get('livro_id')
     livro_devolver = Livros.objects.get(id = id)
     emprestimo_devolver = Emprestimos.objects.get(Q(livro = livro_devolver) & Q(data_devolucao = None))
     emprestimo_devolver.data_devolucao = datetime.datetime.now()
@@ -91,7 +91,7 @@ def devolver_livro(request):
     livro_devolver.emprestado = False
     livro_devolver.save()
 
-    return redirect('/livro/home/?status=2')
+    return JsonResponse({'status': 'devolucao realizada'})
 
 def emprestimos(request):
     usuario = Usuario.objects.get(id = request.session['usuario'])
@@ -150,7 +150,7 @@ def processa_rfid_usuario(request):
         if last_message == usuario.idtag:
             mqtt_client_connection.last_message = None
             mqtt_client_connection.end_connection()
-            return JsonResponse({'status': 'usuario autenticado', 'livro_id': livro.id, 'success': True}, content_type='application/json')
+            return JsonResponse({'status': 'usuario autenticado', 'usuario_id': usuario.id, 'livro_id': livro.id, 'success': True}, content_type='application/json')
 
         else:
             mqtt_client_connection.last_message = None
@@ -176,6 +176,9 @@ def processa_rfid_livro(request):
     livro_id = request.POST.get('livro_id')
     livro = Livros.objects.get(id=livro_id)
 
+    usuario_id = request.POST.get('usuario_id')
+    usuario = Livros.objects.get(id=usuario_id)
+
     while mqtt_client_connection.last_message is None:
         # Aguarde um curto período de tempo antes de verificar novamente
         time.sleep(1)
@@ -186,7 +189,7 @@ def processa_rfid_livro(request):
         if last_message == livro.idtag:
             mqtt_client_connection.last_message = None
             mqtt_client_connection.end_connection()
-            return JsonResponse({'status': 'livro autenticado', 'success': True}, content_type='application/json')
+            return JsonResponse({'status': 'livro autenticado', 'success': True, 'livro_id': livro.id, 'usuario_id': usuario.id}, content_type='application/json')
 
         else:
             mqtt_client_connection.last_message = None

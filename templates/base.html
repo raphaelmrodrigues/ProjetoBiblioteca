@@ -102,7 +102,7 @@
                         </div>
 
                         <div style="display: none;" id="devolucao">
-                            <form action="{% url 'devolver_livro' %}" method="POST">
+                            <form id="form-devolucao" action="{% url 'processa_rfid_usuario' %}" method="POST">
                                 {% csrf_token %}
 
                                 <select id="usuario_nome" class="form-control" name="nome_emprestado">
@@ -110,13 +110,13 @@
                                 </select>
                                 <br>
 
-                                <select class="form-control" name="livro_devolver">
+                                <select class="form-control" name="livro_emprestado">
                                     {% for livro in livros_emprestados %}
                                         <option value="{{livro.id}}">{{livro.nome}}</option>
                                     {% endfor %}
                                 </select>
                                 <br>
-                                <div style="display: none" id="icone2" style="display: block" onclick="submitForm(1)">
+                                <div style="display: none" id="icone2" style="display: block" onclick="submitForm(2)">
                                     <img style="width: 20%; cursor: pointer" src="{% static 'rfid.png' %}" alt="RFID Image">
                                 </div>
                                 <input type="hidden" class="btn btn-success" value="Realizar Devolução">
@@ -306,12 +306,23 @@
 
                         var payload_livro = new FormData()
                         payload_livro.append('livro_id', response.data.livro_id)
+                        payload_livro.append('usuario_id', response.data.usuario_id)
                         payload_livro.append('csrfmiddlewaretoken', csrf_token)
 
+
                         axios.post("{% url 'processa_rfid_livro' %}", payload_livro).then((response2)=>{
-                            console.log(response2)
+                            console.log(response2.data)
                             if (response2.data.status === 'livro autenticado'){
-                                mostrar_form(8)
+
+
+                                axios.post("{% url 'cadastrar_emprestimo' %}", payload_livro).then((response3)=>{
+                                    console.log(response3.data)
+                                    if(response3.data.status === 'emprestimo realizado'){
+                                        window.location.href = '/livro/home/?status=0';
+                                    }
+                                }).catch((error)=>{
+                                    console.log(error)
+                                })
                             }
                             else {
                                 mostrar_form(7)
@@ -327,6 +338,47 @@
                     console.log(error)
                 })
 
+            } else if(v1 == 2){
+                mostrar_form(4);
+                var form_data = new FormData(document.getElementById('form-devolucao'))
+                axios.post("{% url 'processa_rfid_usuario' %}", form_data).then((response)=>{
+                    console.log(response.data)
+                    if (response.data.status === 'usuario autenticado'){
+                        mostrar_form(5)
+
+                        var payload_livro = new FormData()
+                        payload_livro.append('livro_id', response.data.livro_id)
+                        payload_livro.append('usuario_id', response.data.usuario_id)
+                        payload_livro.append('csrfmiddlewaretoken', csrf_token)
+
+
+                        axios.post("{% url 'processa_rfid_livro' %}", payload_livro).then((response2)=>{
+                            console.log(response2.data)
+                            if (response2.data.status === 'livro autenticado'){
+
+
+                                axios.post("{% url 'devolver_livro' %}", payload_livro).then((response3)=>{
+                                    console.log(response3.data)
+                                    if(response3.data.status === 'devolucao realizada'){
+                                        window.location.href = '/livro/home/?status=2';
+                                    }
+                                }).catch((error)=>{
+                                    console.log(error)
+                                })
+                            }
+                            else {
+                                mostrar_form(7)
+                            }
+                        }).catch((error)=>{
+                            console.log(error)
+                        })
+                    }
+                    else {
+                        mostrar_form(6)
+                    }
+                }).catch((error)=>{
+                    console.log(error)
+                })
             }
         }
 
